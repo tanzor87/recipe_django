@@ -60,3 +60,17 @@ ul.mainmenu li a:hover {
 .panelitems {
 	text-align: center;
 }
+
+p.link-read-detail {
+	text-align: right;
+}
+
+p.link-read-detail a {
+	padding: 10px;
+	min-width: 100px;
+	background: #333671;
+	color: #fff;
+	text-decoration: none;
+}
+
+.clear {clear: both;}
