@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  <link type="text/css" rel="stylesheet" href="{% static 'recipeapp/css/styles.css' %}">
+</head>
+<body>
+  <header>
+    <div class="fixed-container">
+      <div class="header">
+        <ul id="mainmenu" class="mainmenu">
+          <li><a href="{% url 'home' %}">Главная страница</a></li>
+            {% for m in menu %}
+              {% if not forloop.last %}<li>{% else %}<li class="last">{% endif %}
+                <a href="{% url m.url_name %}">{{ m.title }}</a>
+              </li>
+             {% endfor %}
+        </ul>
+      </div>
+
+    </div>
+  </header>
+
+  <section>
+    <div class="fixed-container">
+      {% block content %}
+
+      {% endblock %}
+    </div>
+  </section>
+
+  <footer>
+    <div class="fixed-container">
+      <div class="header">
+        <ul id="footermenu" class="mainmenu">
+          <li><a href="{% url 'home' %}">Главная страница</a></li>
+            {% for m in menu %}
+              {% if not forloop.last %}
+              <li>
+                <a href="{% url m.url_name %}">{{ m.title }}</a>
+              </li>
+              {% endif %}
+            {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+
+</body>
+</html>
