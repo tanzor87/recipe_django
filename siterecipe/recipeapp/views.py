@@ -1,7 +1,8 @@
+from operator import index
+
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.views import View
-
 
 menu = [
     {'title': 'О сайте', 'url_name': 'about'},
@@ -14,7 +15,8 @@ date_db = [
      'content': """Сытный и очень вкусный праздничный салат с отварным куриным филе, жареными шампиньонами и морковью по-корейски. Салат легкий и достаточно быстрый в приготовлении. """,
      'products': ['Филе куриное', 'Шампиньоны маленькие', 'Лук репчатый', 'Морковь по-корейски', 'Яйца', 'Сыр твердый',
                   'Майонез', 'Масло растительное', 'Соль', 'Перец черный молотый'], 'recipe': {1: """Подготовьте все необходимые продукты.
-Куриную грудку отварите в кипящей воде до готовности - минут 15-20. Яйца отварите вкрутую (8 минут), остудите в холодной воде.""", 2: """
+Куриную грудку отварите в кипящей воде до готовности - минут 15-20. Яйца отварите вкрутую (8 минут), остудите в холодной воде.""",
+                                                                                               2: """
 Нарежьте лук полукольцами. Грибы нарежьте небольшим кубиком.""", 3: """
 Обжарьте лук и грибы на небольшом огне в минимальном количестве растительного масла.""", 4: """
 Готовую куриную грудку остудите, нарежьте тонкими ломтиками.""", 5: """
@@ -53,8 +55,14 @@ date_db = [
          9: """ Салат "Красное море" готов. Приятного аппетита! """
      }
      },
-
 ]
+
+category_db = [
+    {'id': 1, 'name': 'Первые блюда'},
+    {'id': 2, 'name': 'Вторые блюда'},
+    {'id': 3, 'name': 'Салаты'},
+]
+
 
 class RecipeIndexView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
@@ -74,6 +82,7 @@ class AboutView(View):
         }
         return render(request, 'recipeapp/about.html', context=context)
 
+
 def show_detail(request: HttpRequest, detail_id) -> HttpResponse:
     return HttpResponse(f"Детали рецепта с id = {detail_id}")
 
@@ -84,6 +93,16 @@ def addrecipe(request: HttpRequest) -> HttpResponse:
 
 def login(request: HttpRequest) -> HttpResponse:
     return HttpResponse("Авторизация")
+
+
+def show_category(request: HttpRequest, category_id) -> HttpResponse:
+    context = {
+        'title': 'Главная',
+        'menu': menu,
+        'posts': date_db,
+        'category_selected': category_id,
+    }
+    return render(request, 'recipeapp/recipe-index.html', context=context)
 
 
 def page_not_found(request: HttpRequest, exception):

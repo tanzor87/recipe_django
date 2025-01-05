@@ -57,6 +57,35 @@ ul.mainmenu li a:hover {
 	color: #5f06ed;
 }
 
+.navigation { /* Левая колонка */
+ float: left; /* Обтекание справа */
+ width: 170px; /* Ширина колонки */
+}
+
+.navigation ul {
+ list-style: none;
+}
+
+.content { /* Правая колонка */
+ margin-left: 190px; /* Отступ слева */
+}
+
+.selected {
+ color: #000;
+ font-weight: 700;
+ padding-bottom: 20px;
+}
+
+.unselected {
+  color: #444;
+  font-weight: 300;
+}
+
+.li_main_page {
+ list-style: none;
+}
+
+
 .panelitems {
 	text-align: center;
 }
