@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ title }}</h1>
+
+  {% if recipe.photo %}
+  <p><img src="{{ recipe.photo.url }}" alt=""></p>
+  {% endif %}
+
+  {{ recipe.ingredient_name }}
+
+{% endblock %}

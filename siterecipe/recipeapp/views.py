@@ -1,8 +1,8 @@
-from operator import index
-
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
+
+from .models import Ingredients
 
 menu = [
     {'title': 'О сайте', 'url_name': 'about'},
@@ -65,11 +65,15 @@ category_db = [
 
 
 class RecipeIndexView(View):
+
     def get(self, request: HttpRequest) -> HttpResponse:
+        recipes = Ingredients.objects.all()
+
         context = {
             'title': 'Главная',
             'menu': menu,
             'posts': date_db,
+            'recipe': recipes,
         }
         return render(request, 'recipeapp/recipe-index.html', context=context)
 
@@ -83,8 +87,18 @@ class AboutView(View):
         return render(request, 'recipeapp/about.html', context=context)
 
 
-def show_detail(request: HttpRequest, detail_id) -> HttpResponse:
-    return HttpResponse(f"Детали рецепта с id = {detail_id}")
+def show_detail(request: HttpRequest, detail_slug) -> HttpResponse:
+    # recipe = get_object_or_404(Ingredients, pk=detail_id)
+    recipe = get_object_or_404(Ingredients, slug=detail_slug)
+
+    context = {
+        'title': 'Рецепт',
+        'menu': menu,
+        'recipe': recipe,
+        'recipe_selected': 1,
+    }
+
+    return render(request, 'recipeapp/details.html', context=context)
 
 
 def addrecipe(request: HttpRequest) -> HttpResponse:

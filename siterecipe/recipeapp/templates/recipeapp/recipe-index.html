@@ -8,7 +8,7 @@
       <h2>{{ p.title }}</h2>
       {{ p.content|truncatewords:20 }}
       <div class="clear"></div>
-      <p class="link-read-detail"><a href="{% url 'detail' p.id %}">Рецепт</a></p>
+      <p class="link-read-detail"><a href="{{ p.get_absolute_url }}">Рецепт</a></p>
     </li>
     {% endfor %}
 
