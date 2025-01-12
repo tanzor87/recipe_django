@@ -103,3 +103,17 @@ p.link-read-detail a {
 }
 
 .clear {clear: both;}
+
+.short_description {
+    font-style: italic;
+}
+
+.cooking_description {
+    max-width: 600px;
+    padding-left: 30px;
+}
+
+.step-recipe{
+    color: #e16d4ac8;
+    font-weight: 700;
+}

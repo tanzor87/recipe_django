@@ -3,12 +3,12 @@
 {% block content %}
   <h1>Главная страница</h1>
   <ul>
-    {% for p in posts %}
+    {% for attr in recipe %}
     <li class="li_main_page">
-      <h2>{{ p.title }}</h2>
-      {{ p.content|truncatewords:20 }}
+      <h2>{{ attr.recipe_title }}</h2>
+      {{ attr.short_description|truncatewords:20 }}
       <div class="clear"></div>
-      <p class="link-read-detail"><a href="{{ p.get_absolute_url }}">Рецепт</a></p>
+      <p class="link-read-detail"><a href="{% url 'detail' attr.id %}">Рецепт</a></p>
     </li>
     {% endfor %}
 

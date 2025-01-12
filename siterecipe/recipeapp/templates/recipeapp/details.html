@@ -1,12 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>{{ title }}</h1>
+  <h1>{{ recipe.recipe_title }}</h1>
 
   {% if recipe.photo %}
   <p><img src="{{ recipe.photo.url }}" alt=""></p>
   {% endif %}
 
-  {{ recipe.ingredient_name }}
+  <div class="short_description">
+    {{ recipe.short_description|linebreaks }}
+  </div>
+
+  <div>
+    <p class="step-recipe">Пошаговый рецепт:</p>
+  </div>
+
+  <div class="cooking_description">
+    {{ recipe.cooking_description|linebreaks }}
+  </div>
 
 {% endblock %}
