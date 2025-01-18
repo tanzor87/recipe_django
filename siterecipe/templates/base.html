@@ -30,12 +30,10 @@
     <div class="fixed-container">
       <div class="navigation">
         <ul>
-          {% get_category as category%}
-          <li class="selected">Рецепты</li>
+          <li class="selected"><a href="{% url 'home' %}">Рецепты</a></li>
 
-          {% for cat in category %}
-            <li><a href="{% url 'category' cat.id %}" class="unselected">{{ cat.name }}</a></li>
-          {% endfor %}
+          {% show_categories category_selected %}
+
         </ul>
       </div>
 

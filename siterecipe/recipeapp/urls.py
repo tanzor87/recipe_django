@@ -15,5 +15,6 @@ urlpatterns = [
     path('login/', login, name='login'),
     path('detail/<int:detail_id>/', show_detail, name='detail'),
     # path('detail/<slug:detail_slug>/', show_detail, name='detail'),
-    path('category/<int:category_id>/', show_category, name='category'),
+    # path('category/<int:category_id>/', show_category, name='category'),
+    path('category/<slug:category_slug>/', show_category, name='category'),
 ]
