@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 
-from .models import Ingredients, RecipeBase, Category
+from .models import Ingredients, RecipeBase, Category, Composition
 
 menu = [
     {'title': 'О сайте', 'url_name': 'about'},
@@ -35,11 +35,14 @@ class AboutView(View):
 
 def show_detail(request: HttpRequest, detail_id) -> HttpResponse:
     recipe = get_object_or_404(RecipeBase, pk=detail_id)
+    composition = Composition.objects.filter(recipe_id=recipe)
+    print(composition)
 
     context = {
         'title': 'Рецепт',
         'menu': menu,
         'recipe': recipe,
+        'composition': composition,
         'recipe_selected': 1,
     }
 

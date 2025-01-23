@@ -7,6 +7,9 @@ from django.urls import reverse
 class UnitMeasure(models.Model):
     unit_measure_name = models.CharField(max_length=50, unique=True)
 
+    def __str__(self):
+        return self.unit_measure_name
+
 
 class Ingredients(models.Model):
     ingredient_name = models.CharField(max_length=255, unique=True)
@@ -46,6 +49,16 @@ class Composition(models.Model):
     ingredient = models.ForeignKey(Ingredients, on_delete=models.CASCADE)
     unit_measurer = models.ForeignKey(UnitMeasure, on_delete=models.CASCADE)
     quantity = models.FloatField()
+
+    def __str__(self):
+        if (float(str(self.quantity))).is_integer() and self.quantity != 0.0:
+            q = int(float(str(self.quantity)))
+            result = f'{self.ingredient} - {q} {self.unit_measurer}'
+        elif self.quantity == 0.0:
+            result = f'{self.ingredient} - {self.unit_measurer}'
+        else:
+            result = f'{self.ingredient} - {self.quantity} {self.unit_measurer}'
+        return result
 
 
 class Category(models.Model):

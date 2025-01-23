@@ -12,6 +12,19 @@
   </div>
 
   <div>
+    {% with composition as compos %}
+    {% if compos %}
+     <ul>
+        <li class="composition">Продукты:</li>
+        {% for ingredient in compos %}
+            <li>{{ ingredient }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+  </div>
+
+  <div>
     <p class="step-recipe">Пошаговый рецепт:</p>
   </div>
 
