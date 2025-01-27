@@ -50,7 +50,11 @@ def show_detail(request: HttpRequest, detail_id) -> HttpResponse:
 
 
 def addrecipe(request: HttpRequest) -> HttpResponse:
-    return HttpResponse("Добавление рецепта")
+    context = {
+        'menu': menu,
+        'title': 'Добавление рецепта'
+    }
+    return render(request, 'recipeapp/addrecipe.html', context=context)
 
 
 def login(request: HttpRequest) -> HttpResponse:

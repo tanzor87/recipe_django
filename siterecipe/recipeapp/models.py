@@ -1,7 +1,18 @@
 from math import trunc
 
 from django.db import models
+from django.template.defaultfilters import slugify
 from django.urls import reverse
+
+
+def translit_to_eng(s: str) -> str:
+    d = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
+         'е': 'e', 'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i', 'к': 'k',
+         'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r',
+         'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch',
+         'ш': 'sh', 'щ': 'shch', 'ь': '', 'ы': 'y', 'ъ': '', 'э': 'r', 'ю': 'yu', 'я': 'ya'}
+
+    return "".join(map(lambda x: d[x] if d.get(x, False) else x, s.lower()))
 
 
 class UnitMeasure(models.Model):
@@ -25,12 +36,12 @@ class Ingredients(models.Model):
 
 
 class RecipeBase(models.Model):
-    recipe_title = models.CharField(max_length=255)
-    short_description = models.TextField(blank=True)
+    recipe_title = models.CharField(max_length=255, verbose_name='Название рецепта')
+    short_description = models.TextField(blank=True, verbose_name='Короткое описание')
     cooking_description = models.TextField(blank=True)
     time_create = models.DateTimeField(auto_now_add=True)
-    time_update = models.DateTimeField(auto_now=True)
-    category = models.ForeignKey('Category', on_delete=models.PROTECT)
+    time_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
     recipe_ingredients = models.ManyToManyField(
         Ingredients,
         related_name='ingredients_recipe',
@@ -62,13 +73,20 @@ class Composition(models.Model):
 
 
 class Category(models.Model):
-    category_name = models.CharField(max_length=100, db_index=True)
-    category_slug = models.SlugField(max_length=100, unique=True, db_index=True)
+    category_name = models.CharField(max_length=100, db_index=True, verbose_name='Категория')
+    category_slug = models.SlugField(max_length=100, unique=True, db_index=True, verbose_name='Slug')
 
-    # class Meta:
-    #     ordering = ['category_name']
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+        # ordering = ['category_name']
+
     def get_absolut_url(self):
         return reverse('category', kwargs={'category_slug': self.category_slug})
 
     def __str__(self):
         return self.category_name
+    
+    # def save(self, *args, **kwargs):
+    #     self.category_slug = slugify(translit_to_eng(self.category_name))
+    #     super().save(*args, **kwargs)
