@@ -2,6 +2,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 
+from .forms import AddRecipeForm
 from .models import Ingredients, RecipeBase, Category, Composition
 
 menu = [
@@ -9,6 +10,7 @@ menu = [
     {'title': 'Добавить рецепт', 'url_name': 'add_recipe'},
     {'title': 'Войти', 'url_name': 'login'},
 ]
+
 
 class RecipeIndexView(View):
 
@@ -50,9 +52,11 @@ def show_detail(request: HttpRequest, detail_id) -> HttpResponse:
 
 
 def addrecipe(request: HttpRequest) -> HttpResponse:
+    form = AddRecipeForm()
     context = {
         'menu': menu,
-        'title': 'Добавление рецепта'
+        'title': 'Добавление рецепта',
+        'form': form
     }
     return render(request, 'recipeapp/addrecipe.html', context=context)
 
