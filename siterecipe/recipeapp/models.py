@@ -37,6 +37,11 @@ class Ingredients(models.Model):
 
 class RecipeBase(models.Model):
     recipe_title = models.CharField(max_length=255, verbose_name='Название рецепта')
+    photos = models.ImageField(upload_to='photos/%Y/%m/%d',
+                               default=None,
+                               blank=True,
+                               null=True,
+                               verbose_name='Изображение')
     short_description = models.TextField(blank=True, verbose_name='Короткое описание')
     cooking_description = models.TextField(blank=True, verbose_name='Пошаговый рецепт')
     time_create = models.DateTimeField(auto_now_add=True)
@@ -91,3 +96,8 @@ class Category(models.Model):
     # def save(self, *args, **kwargs):
     #     self.category_slug = slugify(translit_to_eng(self.category_name))
     #     super().save(*args, **kwargs)
+
+
+class UploadFiles(models.Model):
+    file = models.FileField(upload_to='uploads_model')
+

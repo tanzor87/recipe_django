@@ -2,8 +2,8 @@ from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 
-from .forms import AddRecipeForm
-from .models import Ingredients, RecipeBase, Category, Composition
+from .forms import AddRecipeForm, UploadImageForm
+from .models import Ingredients, RecipeBase, Category, Composition, UploadFiles
 
 menu = [
     {'title': 'О сайте', 'url_name': 'about'},
@@ -26,13 +26,21 @@ class RecipeIndexView(View):
         return render(request, 'recipeapp/recipe-index.html', context=context)
 
 
-class AboutView(View):
-    def get(self, request: HttpRequest) -> HttpResponse:
-        context = {
-            'title': 'О сайте',
-            'menu': menu,
-        }
-        return render(request, 'recipeapp/about.html', context=context)
+def about(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = UploadImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            fp = UploadFiles(file=form.cleaned_data['file'])
+            fp.save()
+    else:
+        form = UploadImageForm()
+
+    context = {
+        'title': 'О сайте',
+        'menu': menu,
+        'form': form,
+    }
+    return render(request, 'recipeapp/about.html', context=context)
 
 
 def show_detail(request: HttpRequest, detail_id) -> HttpResponse:
@@ -53,7 +61,7 @@ def show_detail(request: HttpRequest, detail_id) -> HttpResponse:
 
 def addrecipe(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
-        form = AddRecipeForm(request.POST)
+        form = AddRecipeForm(request.POST, request.FILES)
         if form.is_valid():
             # print(form.cleaned_data)
             # try:

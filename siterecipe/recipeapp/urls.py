@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views import (
     RecipeIndexView,
-    AboutView,
+    about,
     addrecipe,
     login,
     show_detail,
@@ -10,7 +10,7 @@ from .views import (
 
 urlpatterns = [
     path('', RecipeIndexView.as_view(), name='home'),
-    path('about/', AboutView.as_view(), name='about'),
+    path('about/', about, name='about'),
     path('addrecipe/', addrecipe, name='add_recipe'),
     path('login/', login, name='login'),
     path('detail/<int:detail_id>/', show_detail, name='detail'),

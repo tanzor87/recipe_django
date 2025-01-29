@@ -21,12 +21,16 @@ class AddRecipeForm(forms.ModelForm):
     class Meta:
         model = RecipeBase
         # fields = '__all__'
-        fields = ['recipe_title', 'short_description', 'cooking_description', 'category']
+        fields = ['recipe_title', 'photos', 'short_description', 'cooking_description', 'category']
         widgets = {
             'recipe_title': forms.TextInput(attrs={'class': 'form-input'}),
             'short_description': forms.Textarea(attrs={'cols': 50, 'rows': 5}),
             'cooking_description': forms.Textarea(attrs={'cols': 50, 'rows': 10}),
         }
+
+
+class UploadImageForm(forms.Form):
+    file = forms.ImageField(label='Изображение')
 
 
 
