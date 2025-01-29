@@ -1,5 +1,5 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 
 from .forms import AddRecipeForm
@@ -52,7 +52,18 @@ def show_detail(request: HttpRequest, detail_id) -> HttpResponse:
 
 
 def addrecipe(request: HttpRequest) -> HttpResponse:
-    form = AddRecipeForm()
+    if request.method == 'POST':
+        form = AddRecipeForm(request.POST)
+        if form.is_valid():
+            # print(form.cleaned_data)
+            try:
+                RecipeBase.objects.create(**form.cleaned_data)
+                return redirect('home')
+            except:
+                form.add_error(None, "Ошибка добавления рецепта")
+    else:
+        form = AddRecipeForm()
+
     context = {
         'menu': menu,
         'title': 'Добавление рецепта',

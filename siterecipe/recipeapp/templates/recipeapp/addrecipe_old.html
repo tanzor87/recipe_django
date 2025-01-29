@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ title }}</h1>
+  <form action="" method="POST">
+      {% csrf_token %}
+      <div class="form-error">{{ form.non_field_errors }}</div>
+      <p><label class="form-label" for="{{ form.recipe_title.id_for_label }}">
+          {{ form.recipe_title.label }}
+      </label>{{ form.recipe_title }}</p>
+      <div class="form-error">{{ form.recipe_title.errors }}</div>
+      <p><label class="form-label" for="{{ form.short_description.id_for_label }}">
+          {{ form.short_description.label }}
+      </label>{{ form.short_description }}</p>
+      <div class="form-error">{{ form.short_description.errors }}</div>
+      <p><label class="form-label" for="{{ form.cooking_description.id_for_label }}">
+          {{ form.cooking_description.label }}
+      </label>{{ form.cooking_description }}</p>
+      <div class="form-error">{{ form.cooking_description.errors }}</div>
+      <p><label class="form-label" for="{{ form.category.id_for_label }}">
+          {{ form.category.label }}
+      </label>{{ form.category }}</p>
+      <div class="form-error">{{ form.category.errors }}</div>
+      <p><button type="submit">Отправить</button></p>
+  </form>
+
+{% endblock %}

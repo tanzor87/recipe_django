@@ -2,10 +2,16 @@ from django import forms
 from .models import Category, Ingredients, Composition
 
 class AddRecipeForm(forms.Form):
-    recipe_title = forms.CharField(max_length=255)
-    short_description = forms.CharField(widget=forms.Textarea)
-    cooking_description = forms.CharField(widget=forms.Textarea)
-    category = forms.ModelChoiceField(queryset=Category.objects.all())
+    recipe_title = forms.CharField(
+        max_length=255,
+        label="Название рецепта",
+        error_messages={
+            'required': 'Без названия никак',
+        },
+    )
+    short_description = forms.CharField(widget=forms.Textarea(attrs={'cols': 50, 'rows': 5}), label='Краткое описание')
+    cooking_description = forms.CharField(widget=forms.Textarea(attrs={'cols': 50, 'rows': 10}), label='Пошаговый рецепт')
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Категория не выбрана", label='Категория')
 
 
 
