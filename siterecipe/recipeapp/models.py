@@ -38,7 +38,7 @@ class Ingredients(models.Model):
 class RecipeBase(models.Model):
     recipe_title = models.CharField(max_length=255, verbose_name='Название рецепта')
     short_description = models.TextField(blank=True, verbose_name='Короткое описание')
-    cooking_description = models.TextField(blank=True)
+    cooking_description = models.TextField(blank=True, verbose_name='Пошаговый рецепт')
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
     category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
@@ -46,6 +46,7 @@ class RecipeBase(models.Model):
         Ingredients,
         related_name='ingredients_recipe',
         through='Composition',
+        verbose_name="Ингредиенты"
     )
 
     def get_absolute_url(self):

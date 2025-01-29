@@ -1,17 +1,32 @@
 from django import forms
-from .models import Category, Ingredients, Composition
+from .models import Category, Ingredients, Composition, RecipeBase
 
-class AddRecipeForm(forms.Form):
-    recipe_title = forms.CharField(
-        max_length=255,
-        label="Название рецепта",
-        error_messages={
-            'required': 'Без названия никак',
-        },
-    )
-    short_description = forms.CharField(widget=forms.Textarea(attrs={'cols': 50, 'rows': 5}), label='Краткое описание')
-    cooking_description = forms.CharField(widget=forms.Textarea(attrs={'cols': 50, 'rows': 10}), label='Пошаговый рецепт')
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Категория не выбрана", label='Категория')
+
+# class AddRecipeForm(forms.Form):
+#     recipe_title = forms.CharField(
+#         max_length=255,
+#         label="Название рецепта",
+#         error_messages={
+#             'required': 'Без названия никак',
+#         },
+#         widget=forms.Textarea(attrs={'cols': 50, 'rows': 1}),
+#     )
+#     short_description = forms.CharField(widget=forms.Textarea(attrs={'cols': 50, 'rows': 5}), label='Краткое описание')
+#     cooking_description = forms.CharField(widget=forms.Textarea(attrs={'cols': 50, 'rows': 10}), label='Пошаговый рецепт')
+#     category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Категория не выбрана", label='Категория')
+
+class AddRecipeForm(forms.ModelForm):
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Категория не выбрана",
+                                      label='Категория')
+    class Meta:
+        model = RecipeBase
+        # fields = '__all__'
+        fields = ['recipe_title', 'short_description', 'cooking_description', 'category']
+        widgets = {
+            'recipe_title': forms.TextInput(attrs={'class': 'form-input'}),
+            'short_description': forms.Textarea(attrs={'cols': 50, 'rows': 5}),
+            'cooking_description': forms.Textarea(attrs={'cols': 50, 'rows': 10}),
+        }
 
 
 

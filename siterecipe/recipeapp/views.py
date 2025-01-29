@@ -56,11 +56,13 @@ def addrecipe(request: HttpRequest) -> HttpResponse:
         form = AddRecipeForm(request.POST)
         if form.is_valid():
             # print(form.cleaned_data)
-            try:
-                RecipeBase.objects.create(**form.cleaned_data)
-                return redirect('home')
-            except:
-                form.add_error(None, "Ошибка добавления рецепта")
+            # try:
+            #     RecipeBase.objects.create(**form.cleaned_data)
+            #     return redirect('home')
+            # except:
+            #     form.add_error(None, "Ошибка добавления рецепта")
+            form.save()
+            return redirect('home')
     else:
         form = AddRecipeForm()
 
