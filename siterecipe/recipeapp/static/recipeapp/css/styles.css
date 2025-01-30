@@ -131,7 +131,7 @@ p.link-read-detail a {
 	list-style-type: none;
 	color: #f46506;
 	font-weight: 500;
-	padding-bottom: 10px;
+	padding: 10px 0 10px 0;
 }
 
 .form-label {
@@ -150,4 +150,13 @@ p.link-read-detail a {
 .form-input {
     width: 382px;
     font-size: 16px;
+}
+
+.composition-image{
+	display: flex;
+}
+
+.recipe-image{
+	max-width: 300px;
+	padding: 10px;
 }
