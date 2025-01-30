@@ -1,6 +1,7 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
+from django.views.generic import TemplateView
 
 from .forms import AddRecipeForm, UploadImageForm
 from .models import Ingredients, RecipeBase, Category, Composition, UploadFiles
@@ -12,18 +13,30 @@ menu = [
 ]
 
 
-class RecipeIndexView(View):
+# class RecipeIndexView(View):
+#
+#     def get(self, request: HttpRequest) -> HttpResponse:
+#         recipes = RecipeBase.objects.all()
+#
+#         context = {
+#             'title': 'Главная',
+#             'menu': menu,
+#             'recipe': recipes,
+#             'category_selected': 0,
+#         }
+#         return render(request, 'recipeapp/recipe-index.html', context=context)
 
-    def get(self, request: HttpRequest) -> HttpResponse:
-        recipes = RecipeBase.objects.all()
+class RecipeIndexView(TemplateView):
+    template_name = 'recipeapp/recipe-index.html'
+    recipes = RecipeBase.objects.all()
+    extra_context = {
+        'title': 'Главная',
+        'menu': menu,
+        'recipe': recipes,
+        'category_selected': 0,
+    }
 
-        context = {
-            'title': 'Главная',
-            'menu': menu,
-            'recipe': recipes,
-            'category_selected': 0,
-        }
-        return render(request, 'recipeapp/recipe-index.html', context=context)
+
 
 
 def about(request: HttpRequest) -> HttpResponse:
@@ -80,6 +93,30 @@ def addrecipe(request: HttpRequest) -> HttpResponse:
         'form': form
     }
     return render(request, 'recipeapp/addrecipe.html', context=context)
+
+
+class AddRecipe(View):
+    def get(self, request):
+        form = AddRecipeForm()
+        context = {
+            'menu': menu,
+            'title': 'Добавление рецепта',
+            'form': form
+        }
+        return render(request, 'recipeapp/addrecipe.html', context=context)
+
+    def post(self, request):
+        form = AddRecipeForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+
+        context = {
+            'menu': menu,
+            'title': 'Добавление рецепта',
+            'form': form
+        }
+        return render(request, 'recipeapp/addrecipe.html', context=context)
 
 
 def login(request: HttpRequest) -> HttpResponse:

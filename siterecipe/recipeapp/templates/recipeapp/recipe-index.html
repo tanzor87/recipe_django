@@ -7,10 +7,21 @@
 
   <ul>
     {% for attr in recipe %}
-    <li class="li_main_page">
 
+    <li class="li_main_page">
+	<div class="article-panel">
+	<p class="first">Категория: {{attr.category.category_name}} | автор:
+	{{ attr.author.username|default:"неизвестен" }}</p>
+	<p class="last">Дата: {{attr.time_update|date:"d.m.Y" }}</p>
+    </div>
+
+      {% if attr.photos %}
+      <p><img class="img-article-left thumb" src="{{attr.photos.url}}"></p>
+      {% endif %}
+
+      <h3>{{ attr.recipe_title }}</h3>
       {% autoescape off %}
-      {{ attr.short_description }}
+        {{ attr.short_description|linebreaks }}
       {% endautoescape %}
 
       <div class="clear"></div>

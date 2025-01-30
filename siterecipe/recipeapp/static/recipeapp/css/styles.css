@@ -160,3 +160,44 @@ p.link-read-detail a {
 	max-width: 300px;
 	padding: 10px;
 }
+
+div.article-panel {
+    background: #eee;
+    padding: 5px 10px 5px 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+    color: #555;
+}
+
+/* div.article-panel p.first {
+    margin: 0;
+    float: left;
+} */
+
+/* div.article-panel p.last {
+    margin: 0;
+    float: right;
+} */
+
+.first {
+    margin: 0;
+    float: left;
+}
+
+.last {
+    margin: 0;
+    float: right;
+}
+
+.img-article-left {
+	max-width: 300px;
+	height: auto;
+	float: left;
+	padding: 0 10px 10px 0;
+}
+
+.thumb {
+	max-width: 150px;
+	height: auto;
+}
+
