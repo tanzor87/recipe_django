@@ -46,7 +46,7 @@ class RecipeBase(models.Model):
     cooking_description = models.TextField(blank=True, verbose_name='Пошаговый рецепт')
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
-    category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='cat_recipe', verbose_name='Категория')
     recipe_ingredients = models.ManyToManyField(
         Ingredients,
         related_name='ingredients_recipe',
