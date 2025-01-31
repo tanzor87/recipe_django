@@ -7,6 +7,7 @@ from .views import (
     login,
     show_detail,
     show_category,
+    RecipeCategory,
 )
 
 urlpatterns = [
@@ -18,5 +19,6 @@ urlpatterns = [
     path('detail/<int:detail_id>/', show_detail, name='detail'),
     # path('detail/<slug:detail_slug>/', show_detail, name='detail'),
     # path('category/<int:category_id>/', show_category, name='category'),
-    path('category/<slug:category_slug>/', show_category, name='category'),
+    # path('category/<slug:category_slug>/', show_category, name='category'),
+    path('category/<slug:category_slug>/', RecipeCategory.as_view(), name='category'),
 ]

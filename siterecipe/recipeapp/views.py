@@ -1,7 +1,9 @@
+from lib2to3.fixes.fix_input import context
+
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 
 from .forms import AddRecipeForm, UploadImageForm
 from .models import Ingredients, RecipeBase, Category, Composition, UploadFiles
@@ -136,6 +138,27 @@ def show_category(request: HttpRequest, category_slug) -> HttpResponse:
         'category_selected': category.pk,
     }
     return render(request, 'recipeapp/recipe-index.html', context=context)
+
+class RecipeCategory(ListView):
+    template_name = 'recipeapp/recipe-index.html'
+    context_object_name = 'recipe'
+    allow_empty = False
+
+    def get_queryset(self):
+        query = RecipeBase.objects.filter(category__category_slug=self.kwargs['category_slug'])
+        print(query)
+        return query
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = context['recipe'][0].category
+        context['title'] = 'Категория - ' + category.category_name
+        context['menu'] = menu
+        context['category_selected'] = category.pk
+        print(context)
+        return context
+
+
 
 
 def page_not_found(request: HttpRequest, exception):
