@@ -9,11 +9,11 @@
     {% for attr in recipe %}
 
     <li class="li_main_page">
-	<div class="article-panel">
-	<p class="first">Категория: {{attr.category.category_name}} | автор:
-	{{ attr.author.username|default:"неизвестен" }}</p>
-	<p class="last">Дата: {{attr.time_update|date:"d.m.Y" }}</p>
-    </div>
+      <div class="article-panel">
+      <p class="first">Категория: {{attr.category.category_name}} | автор:
+      {{ attr.author.username|default:"неизвестен" }}</p>
+      <p class="last">Дата: {{attr.time_update|date:"d.m.Y" }}</p>
+      </div>
 
       {% if attr.photos %}
       <p><img class="img-article-left thumb" src="{{attr.photos.url}}"></p>
@@ -32,4 +32,34 @@
   </ul>
 
 
+{% endblock %}
+
+{% block navigate %}
+{% if  page_obj.has_other_pages %}
+  <nav class="list-pages">
+    <ul>
+      {% if page_obj.has_previous %}
+		<li class="page-num">
+			<a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+		</li>
+      {% endif %}
+
+      {% for p in paginator.page_range %}
+      {% if page_obj.number == p %}
+        <li class="page-num page-num-selected">{{ p }}</li>
+      {% elif p > page_obj.number|add:-3 and p <= page_obj.number|add:2 %}
+        <li class="page-num">
+          <a href="?page={{ p }}">{{ p }}</a>
+        </li>
+      {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li class="page-num">
+            <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}
 {% endblock %}
