@@ -2,7 +2,7 @@ from django import template
 from django.db.models import Count
 
 from recipeapp.models import Category
-import recipeapp.views as views
+# import recipeapp.views as views
 
 register = template.Library()
 

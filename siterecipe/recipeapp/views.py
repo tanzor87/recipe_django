@@ -1,9 +1,7 @@
-from lib2to3.fixes.fix_input import context
-
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView
 
 from .forms import AddRecipeForm, UploadImageForm
 from .models import Ingredients, RecipeBase, Category, Composition, UploadFiles
@@ -72,6 +70,26 @@ def show_detail(request: HttpRequest, detail_id) -> HttpResponse:
     }
 
     return render(request, 'recipeapp/details.html', context=context)
+
+
+class ShowDetail(DetailView):
+    model = RecipeBase
+    template_name = 'recipeapp/details.html'
+    pk_url_kwarg = 'detail_id'
+    context_object_name = "recipe"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(context)
+        # category = context['recipe'][0].category
+        # context['title'] = 'Категория - ' + category.category_name
+        # context['menu'] = menu
+        # context['category_selected'] = category.pk
+        return context
+
+
+
+
 
 
 def addrecipe(request: HttpRequest) -> HttpResponse:
@@ -146,7 +164,6 @@ class RecipeCategory(ListView):
 
     def get_queryset(self):
         query = RecipeBase.objects.filter(category__category_slug=self.kwargs['category_slug'])
-        print(query)
         return query
 
     def get_context_data(self, **kwargs):
@@ -155,7 +172,6 @@ class RecipeCategory(ListView):
         context['title'] = 'Категория - ' + category.category_name
         context['menu'] = menu
         context['category_selected'] = category.pk
-        print(context)
         return context
 
 
