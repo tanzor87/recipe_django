@@ -13,7 +13,7 @@ class RecipeIndexView(DataMixin, ListView):
     context_object_name = 'recipe'
     title_page = 'Главная'
     category_selected = 0
-    paginate_by = 3
+    paginate_by = 5
 
     def get_queryset(self):
         return RecipeBase.objects.all()
