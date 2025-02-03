@@ -46,13 +46,17 @@ class RecipeBase(models.Model):
     cooking_description = models.TextField(blank=True, verbose_name='Пошаговый рецепт')
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
-    category = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='cat_recipe', verbose_name='Категория')
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='cat_recipe',
+                                 verbose_name='Категория')
     recipe_ingredients = models.ManyToManyField(
         Ingredients,
         related_name='ingredients_recipe',
         through='Composition',
         verbose_name="Ингредиенты"
     )
+
+    class Meta:
+        ordering = ['recipe_title']
 
     def get_absolute_url(self):
         return reverse('detail', kwargs={'detail_id': self.pk})
@@ -92,7 +96,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.category_name
-    
+
     # def save(self, *args, **kwargs):
     #     self.category_slug = slugify(translit_to_eng(self.category_name))
     #     super().save(*args, **kwargs)
@@ -100,4 +104,3 @@ class Category(models.Model):
 
 class UploadFiles(models.Model):
     file = models.FileField(upload_to='uploads_model')
-

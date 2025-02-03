@@ -2,12 +2,9 @@ from django.urls import path, include
 from .views import (
     RecipeIndexView,
     about,
-    # addrecipe,
     AddRecipe,
     UpdateRecipe,
     login,
-    # show_detail,
-    # show_category,
     ShowDetail,
     RecipeCategory,
 )

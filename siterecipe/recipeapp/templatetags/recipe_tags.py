@@ -2,9 +2,14 @@ from django import template
 from django.db.models import Count
 
 from recipeapp.models import Category
-# import recipeapp.views as views
+from recipeapp.utils import menu
 
 register = template.Library()
+
+
+@register.simple_tag()
+def get_menu():
+    return menu
 
 
 @register.inclusion_tag('recipeapp/list_categories.html')
