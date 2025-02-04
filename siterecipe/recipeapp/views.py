@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -18,7 +20,7 @@ class RecipeIndexView(DataMixin, ListView):
     def get_queryset(self):
         return RecipeBase.objects.all()
 
-
+@login_required
 def about(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = UploadImageForm(request.POST, request.FILES)
@@ -52,11 +54,15 @@ class ShowDetail(DataMixin, DetailView):
     def get_object(self, queryset=None):
         return get_object_or_404(RecipeBase, id=self.kwargs[self.pk_url_kwarg])
 
-
-class AddRecipe(DataMixin, CreateView):
+class AddRecipe(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddRecipeForm
     template_name = 'recipeapp/addrecipe.html'
     title_page = 'Добавление рецепта'
+
+    def form_valid(self, form):
+        r = form.save(commit=False)
+        r.author = self.request.user
+        return super().form_valid(form)
 
 
 class UpdateRecipe(DataMixin, UpdateView):

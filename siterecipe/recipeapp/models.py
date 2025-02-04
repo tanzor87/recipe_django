@@ -1,7 +1,5 @@
-from math import trunc
-
+from django.contrib.auth import get_user_model
 from django.db import models
-from django.template.defaultfilters import slugify
 from django.urls import reverse
 
 
@@ -54,6 +52,13 @@ class RecipeBase(models.Model):
         through='Composition',
         verbose_name="Ингредиенты"
     )
+    author = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        related_name='recipes',
+        null=True,
+        default=None,
+        verbose_name="Автор")
 
     class Meta:
         ordering = ['recipe_title']
