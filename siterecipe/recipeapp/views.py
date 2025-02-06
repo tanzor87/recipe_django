@@ -80,7 +80,7 @@ class RecipeCategory(DataMixin, ListView):
     template_name = 'recipeapp/recipe-index.html'
     context_object_name = 'recipe'
     allow_empty = False
-    paginate_by = 3
+    paginate_by = 5
 
     def get_queryset(self):
         query = RecipeBase.objects.filter(category__category_slug=self.kwargs['category_slug'])
