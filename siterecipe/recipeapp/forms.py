@@ -18,10 +18,12 @@ from .models import Category, Ingredients, Composition, RecipeBase
 class AddRecipeForm(forms.ModelForm):
     category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Категория не выбрана",
                                       label='Категория')
+    # ingredient = forms.
+
     class Meta:
         model = RecipeBase
-        # fields = '__all__'
-        fields = ['recipe_title', 'photos', 'short_description', 'cooking_description', 'category']
+        fields = '__all__'
+        # fields = ['recipe_title', 'photos', 'short_description', 'cooking_description', 'category']
         widgets = {
             'recipe_title': forms.TextInput(attrs={'class': 'form-input'}),
             'short_description': forms.Textarea(attrs={'cols': 50, 'rows': 5}),
