@@ -1,5 +1,5 @@
 from django import forms
-from .models import Category, Ingredients, Composition, RecipeBase
+from .models import Category, Ingredients, Composition, RecipeBase, UnitMeasure
 
 
 # class AddRecipeForm(forms.Form):
@@ -18,12 +18,13 @@ from .models import Category, Ingredients, Composition, RecipeBase
 class AddRecipeForm(forms.ModelForm):
     category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Категория не выбрана",
                                       label='Категория')
+
     # ingredient = forms.
 
     class Meta:
         model = RecipeBase
-        fields = '__all__'
-        # fields = ['recipe_title', 'photos', 'short_description', 'cooking_description', 'category']
+        # fields = '__all__'
+        fields = ['recipe_title', 'photos', 'short_description', 'cooking_description', 'category']
         widgets = {
             'recipe_title': forms.TextInput(attrs={'class': 'form-input'}),
             'short_description': forms.Textarea(attrs={'cols': 50, 'rows': 5}),
@@ -31,11 +32,23 @@ class AddRecipeForm(forms.ModelForm):
         }
 
 
-class UploadImageForm(forms.Form):
+class UploadImageForm(forms.ModelForm):
     file = forms.ImageField(label='Изображение')
 
 
+class IngredientForm(forms.ModelForm):
+    class Meta:
+        model = Ingredients
+        fields = ['ingredient_name']
 
+
+class CompositionForm(forms.ModelForm):
+    unit_measurer = forms.ModelChoiceField(queryset=UnitMeasure.objects.all(), empty_label="Не выбрана",
+                                           label='Единица измерения')
+
+    class Meta:
+        model = Composition
+        fields = ['quantity', 'unit_measurer']
 
     # recipe_title = models.CharField(max_length=255, verbose_name='Название рецепта')
     # short_description = models.TextField(blank=True, verbose_name='Короткое описание')

@@ -6,14 +6,17 @@
       {% csrf_token %}
       <div class="form-error">{{ form.non_field_errors }}</div>
 
-      {% for f in form %}
+      {% for f in recipe_form %}
       <p><label class="form-label" for="{{ f.id_for_label }}">
           {{ f.label }}
       </label>{{ f }}</p>
       <div class="form-error">{{ f.errors }}</div>
       {% endfor %}
 
-      <div class="form-error">{{ form.category.errors }}</div>
+      {{ ingredient_form.as_p }}
+      {{ composition_form.as_p }}
+
+      <div class="form-error">{{ recipe_form.category.errors }}</div>
       <p><button type="submit">Отправить</button></p>
   </form>
 

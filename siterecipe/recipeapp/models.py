@@ -21,7 +21,7 @@ class UnitMeasure(models.Model):
 
 
 class Ingredients(models.Model):
-    ingredient_name = models.CharField(max_length=255, unique=True)
+    ingredient_name = models.CharField(max_length=255, unique=True, verbose_name='Ингредиент')
 
     class Meta:
         ordering = ['ingredient_name']
@@ -73,8 +73,8 @@ class RecipeBase(models.Model):
 class Composition(models.Model):
     recipe = models.ForeignKey(RecipeBase, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredients, on_delete=models.CASCADE)
-    unit_measurer = models.ForeignKey(UnitMeasure, on_delete=models.CASCADE)
-    quantity = models.FloatField()
+    unit_measurer = models.ForeignKey(UnitMeasure, on_delete=models.CASCADE, verbose_name='Единицы измерения')
+    quantity = models.FloatField(verbose_name='Количество')
 
     def __str__(self):
         if (float(str(self.quantity))).is_integer() and self.quantity != 0.0:

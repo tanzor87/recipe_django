@@ -3,6 +3,7 @@ from .views import (
     RecipeIndexView,
     about,
     AddRecipe,
+    add_recipe,
     UpdateRecipe,
     login,
     ShowDetail,
@@ -12,8 +13,8 @@ from .views import (
 urlpatterns = [
     path('', RecipeIndexView.as_view(), name='home'),
     path('about/', about, name='about'),
-    # path('addrecipe/', addrecipe, name='add_recipe'),
-    path('addrecipe/', AddRecipe.as_view(), name='add_recipe'),
+    path('addrecipe/', add_recipe, name='add_recipe'),
+    # path('addrecipe/', AddRecipe.as_view(), name='add_recipe'),
     path('edit/<int:pk>/', UpdateRecipe.as_view(), name='edit_recipe'),
     path('login/', login, name='login'),
     # path('detail/<int:detail_id>/', show_detail, name='detail'),
