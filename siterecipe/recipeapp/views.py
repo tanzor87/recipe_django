@@ -106,8 +106,8 @@ class AddRecipe(LoginRequiredMixin, DataMixin, CreateView):
 
 @login_required
 def add_recipe(request: HttpRequest) -> HttpResponse:
-    IngredientFormSet = formset_factory(IngredientForm, extra = 5)
-    CompositionFormSet = formset_factory(CompositionForm, extra = 5)
+    IngredientFormSet = formset_factory(IngredientForm, extra = 12, max_num=3)
+    CompositionFormSet = formset_factory(CompositionForm, extra = 12, max_num=3)
     if request.method == 'POST':
         recipe_form = AddRecipeForm(request.POST, request.FILES)
         # ingredient_formset = IngredientFormSet(request.POST, request.FILES, prefix='ingredient')
