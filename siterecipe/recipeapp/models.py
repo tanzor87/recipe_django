@@ -21,7 +21,7 @@ class UnitMeasure(models.Model):
 
 
 class Ingredients(models.Model):
-    ingredient_name = models.CharField(max_length=255, unique=True, verbose_name='Ингредиент')
+    ingredient_name = models.CharField(max_length=255, unique=False, verbose_name='Ингредиент')
 
     class Meta:
         ordering = ['ingredient_name']
