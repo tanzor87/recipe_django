@@ -73,7 +73,7 @@ class RecipeBase(models.Model):
 class Composition(models.Model):
     recipe = models.ForeignKey(RecipeBase, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredients, on_delete=models.CASCADE)
-    unit_measurer = models.ForeignKey(UnitMeasure, on_delete=models.CASCADE, verbose_name='Единицы измерения')
+    unit_measurer = models.ForeignKey(UnitMeasure, on_delete=models.CASCADE, verbose_name='Ед. из.')
     quantity = models.FloatField(verbose_name='Количество')
 
     def __str__(self):

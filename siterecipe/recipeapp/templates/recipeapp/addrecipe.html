@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>{{ title }}</h1>
-<form action="" method="POST" enctype="multipart/form-data">
+<form id="form-container" action="" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-error">{{ form.non_field_errors }}</div>
 
@@ -13,29 +13,55 @@
   <div class="form-error">{{ f.errors }}</div>
   {% endfor %}
 
-  {{ ingredient_formset.management_data }}
-  {{ composition_formset.management_data }}
+  {{ ingredient_formset.management_form }}
+  {{ composition_formset.management_form }}
 
   <div class="add-ingredient">
     <div>
-    {% for ing in ingredient_formset %}
-    <div class="add-ingredients">
-      {{ ing.as_p}}
-    </div>
-    {% endfor %}
+      {% for ing in ingredient_formset %}
+      <div class="add-ingredients recipe-form">
+        {{ ing.as_p}}
+      </div>
+      {% endfor %}
     </div>
 
     <div>
-    {% for comp in composition_formset %}
-    <div class="add-ingredients">
-      {{ comp.as_p}}
-    </div>
-    {% endfor %}
+      {% for comp in composition_formset %}
+      <div class="add-ingredients recipe-form">
+        {{ comp.as_p}}
+      </div>
+      {% endfor %}
     </div>
   </div>
-
+  <button id="add-form" type="button">Добавить ингредиент</button>
   <div class="form-error">{{ recipe_form.category.errors }}</div>
   <p><button type="submit">Отправить</button></p>
 </form>
+
+<script>
+  let recipeForm = document.querySelectorAll(".recipe-form")
+  let container = document.querySelector("#form-container")
+  let addButton = document.querySelector("#add-form")
+  let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+
+  let formNum = recipeForm.length - 1
+  addButton.addEventListener('click', addForm)
+
+  function addForm(e) {
+    e.preventDefault()
+
+    let newForm1 = recipeForm[0].cloneNode(true)
+    let newForm2 = recipeForm[1].cloneNode(true)
+    let formRegex = RegExp(`form-(\\d){1}-`, 'g')
+
+    formNum++
+    newForm1.innerHTML = newForm1.innerHTML.replace(formRegex, `form-${formNum}-`)
+    container.insertBefore(newForm1, addButton)
+    newForm2.innerHTML = newForm2.innerHTML.replace(formRegex, `form-${formNum}-`)
+    container.insertBefore(newForm2, addButton)
+
+    totalForms.setAttribute('value', `${formNum + 1}`)
+  }
+</script>
 
 {% endblock %}
