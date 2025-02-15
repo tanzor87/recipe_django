@@ -44,28 +44,27 @@ class IngredientForm(forms.ModelForm):
         fields = ['ingredient_name']
 
 
-IngredientFormSet = modelformset_factory(Ingredients, fields=('ingredient_name',), extra=1)
-
-
 class CompositionForm(forms.ModelForm):
-    unit_measurer = forms.ModelChoiceField(queryset=UnitMeasure.objects.all(), empty_label="Не выбрана",
-                                           label='Единица измерения')
+    ingredient_name = forms.CharField(max_length=255)
+    unit_measurer = forms.ModelChoiceField(queryset=UnitMeasure.objects.all(), required=True, empty_label="Не выбрана",
+                                               label='Единица измерения')
 
     class Meta:
         model = Composition
-        fields = ['quantity', 'unit_measurer']
+        fields = ['ingredient_name', 'quantity', 'unit_measurer']
+
+# IngredientFormSet = modelformset_factory(Ingredients, fields=('ingredient_name',), extra=1)
+#
+#
+# class CompositionForm(forms.ModelForm):
+#     unit_measurer = forms.ModelChoiceField(queryset=UnitMeasure.objects.all(), empty_label="Не выбрана",
+#                                            label='Единица измерения')
+#
+#     class Meta:
+#         model = Composition
+#         fields = ['quantity', 'unit_measurer']
+#
+#
+# CompositionFormSet = modelformset_factory(Composition, form=CompositionForm, extra=1)
 
 
-CompositionFormSet = modelformset_factory(Composition, form=CompositionForm, extra=1)
-
-# recipe_title = models.CharField(max_length=255, verbose_name='Название рецепта')
-# short_description = models.TextField(blank=True, verbose_name='Короткое описание')
-# cooking_description = models.TextField(blank=True)
-# time_create = models.DateTimeField(auto_now_add=True)
-# time_update = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
-# category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
-# recipe_ingredients = models.ManyToManyField(
-#     Ingredients,
-#     related_name='ingredients_recipe',
-#     through='Composition',
-# )

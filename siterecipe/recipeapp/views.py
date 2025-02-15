@@ -7,9 +7,8 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView
 
-from .forms import AddRecipeForm, UploadImageForm, IngredientForm, CompositionForm, IngredientFormSet, \
-    CompositionFormSet
-from .models import Ingredients, RecipeBase, Category, Composition, UploadFiles
+from .forms import AddRecipeForm, UploadImageForm
+from .models import Ingredients, RecipeBase, Category, Composition, UploadFiles, UnitMeasure
 from .utils import DataMixin
 
 menu = [
@@ -30,20 +29,10 @@ class RecipeIndexView(DataMixin, ListView):
         return RecipeBase.objects.all()
 
 
-@login_required
 def about(request: HttpRequest) -> HttpResponse:
-    if request.method == "POST":
-        form = UploadImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            fp = UploadFiles(file=form.cleaned_data['file'])
-            fp.save()
-    else:
-        form = UploadImageForm()
-
     context = {
         'title': 'О сайте',
-        # 'menu': menu,
-        'form': form,
+        'menu': menu,
     }
     return render(request, 'recipeapp/about.html', context=context)
 
@@ -65,132 +54,36 @@ class ShowDetail(DataMixin, DetailView):
         return get_object_or_404(RecipeBase, id=self.kwargs[self.pk_url_kwarg])
 
 
-# class AddRecipe(LoginRequiredMixin, DataMixin, CreateView):
-#     form_class = AddRecipeForm
-#     template_name = 'recipeapp/addrecipe.html'
-#     title_page = 'Добавление рецепта'
-#
-#     def form_valid(self, form):
-#         r = form.save(commit=False)
-#         r.author = self.request.user
-#         return super().form_valid(form)
-
-
-# @login_required
-# def add_recipe(request: HttpRequest) -> HttpResponse:
-#     if request.method == 'POST':
-#         recipe_form = AddRecipeForm(request.POST, request.FILES)
-#         ingredient_form = IngredientForm(request.POST)
-#         composition_form = CompositionForm(request.POST)
-#         if all([recipe_form.is_valid(), ingredient_form.is_valid(), composition_form.is_valid()]):
-#             recipe = recipe_form.save(commit=False)
-#             recipe.author = request.user
-#             recipe.save()
-#             ingredient = ingredient_form.save(commit=False)
-#             ingredient.save()
-#             composition = composition_form.save(commit=False)
-#             composition.recipe = recipe
-#             composition.ingredient = ingredient
-#             composition.save()
-#
-#             return redirect('home')
-#     else:
-#         recipe_form = AddRecipeForm()
-#         ingredient_form = IngredientForm()
-#         composition_form = CompositionForm()
-#
-#     context = {
-#         'menu': menu,
-#         'title': 'Добавление рецепта',
-#         'recipe_form': recipe_form,
-#         'ingredient_form': ingredient_form,
-#         'composition_form': composition_form,
-#     }
-#     return render(request, 'recipeapp/addrecipe.html', context=context)
 @login_required
 def add_recipe(request: HttpRequest) -> HttpResponse:
-    IngredientFormSet = formset_factory(IngredientForm, extra=1)
-    CompositionFormSet = formset_factory(CompositionForm, extra=1)
     if request.method == 'POST':
         recipe_form = AddRecipeForm(request.POST, request.FILES)
-        # ingredient_formset = IngredientFormSet(request.POST, request.FILES, prefix='ingredient')
-        # composition_formset = CompositionFormSet(request.POST, request.FILES, prefix='composition')
-        ingredient_formset = IngredientFormSet(request.POST, request.FILES)
-        composition_formset = CompositionFormSet(request.POST, request.FILES)
-        if all([recipe_form.is_valid(), ingredient_formset.is_valid(), composition_formset.is_valid()]):
+        ingredient_names = request.POST.getlist('ingredient_name')
+        quantities = request.POST.getlist('quantity')
+        unit_measures = request.POST.getlist('unit_measure')
+
+        if recipe_form.is_valid():
             recipe = recipe_form.save(commit=False)
             recipe.author = request.user
             recipe.save()
 
-            for ingredient_form, composition_form in zip(ingredient_formset, composition_formset):
-                ingredient = ingredient_form.save(commit=False)
-                # ingredient.save()
-                composition = composition_form.save(commit=False)
-                composition.recipe = recipe
-                composition.ingredient = ingredient
-                ingredient.save()
+            for ingredient_name, quantity, unit_measure_name in zip(ingredient_names, quantities, unit_measures):
+                ingredient, created = Ingredients.objects.get_or_create(ingredient_name=ingredient_name)
+                unit_measure, created = UnitMeasure.objects.get_or_create(unit_measure_name=unit_measure_name)
+                composition = Composition(recipe=recipe, ingredient=ingredient, quantity=quantity,
+                                          unit_measurer=unit_measure)
                 composition.save()
 
             return redirect('home')
     else:
         recipe_form = AddRecipeForm()
-        # ingredient_formset = IngredientForm(prefix='ingredient')
-        # composition_formset = CompositionForm(prefix='composition')
-        ingredient_formset = IngredientFormSet()
-        composition_formset = CompositionFormSet()
 
     context = {
         'menu': menu,
         'title': 'Добавление рецепта',
         'recipe_form': recipe_form,
-        'ingredient_formset': ingredient_formset,
-        'composition_formset': composition_formset,
     }
     return render(request, 'recipeapp/addrecipe.html', context=context)
-
-
-class AddRecipe(TemplateView):
-    template_name = 'recipeapp/addrecipe.html'
-
-    def get(self, *args, **kwargs):
-        recipe_form = AddRecipeForm()
-        ingredient_formset = IngredientFormSet(queryset=Ingredients.objects.none())
-        composition_formset = CompositionFormSet(queryset=Composition.objects.none())
-        context = {
-            'menu': menu,
-            'title': 'Добавление рецепта',
-            'recipe_form': recipe_form,
-            'ingredient_formset': ingredient_formset,
-            'composition_formset': composition_formset,
-        }
-        return self.render_to_response(context)
-
-    def post(self, *args, **kwargs):
-        recipe_form = AddRecipeForm(self.request.POST, self.request.FILES)
-        ingredient_formset = IngredientFormSet(self.request.POST)
-        composition_formset = CompositionFormSet(self.request.POST)
-        if all([recipe_form.is_valid(), ingredient_formset.is_valid(), composition_formset.is_valid()]):
-            recipe = recipe_form.save(commit=False)
-            recipe.author = self.request.user
-            recipe.save()
-
-            for ingredient_form, composition_form in zip(ingredient_formset, composition_formset):
-                ingredient = ingredient_form.save(commit=False)
-                ingredient.save()
-                composition = composition_form.save(commit=False)
-                composition.recipe = recipe
-                composition.ingredient = ingredient
-                composition.save()
-            return redirect(reverse_lazy('home'))
-
-        context = {
-            'menu': menu,
-            'title': 'Добавление рецепта',
-            'recipe_form': recipe_form,
-            'ingredient_formset': ingredient_formset,
-            'composition_formset': composition_formset,
-        }
-        return self.render_to_response(context)
 
 
 class UpdateRecipe(DataMixin, UpdateView):
@@ -198,10 +91,6 @@ class UpdateRecipe(DataMixin, UpdateView):
     fields = ['recipe_title', 'photos', 'short_description', 'cooking_description', 'category']
     template_name = 'recipeapp/addrecipe.html'
     title_page = 'Редактирование рецепта'
-
-
-def login(request: HttpRequest) -> HttpResponse:
-    return HttpResponse("Авторизация")
 
 
 class RecipeCategory(DataMixin, ListView):

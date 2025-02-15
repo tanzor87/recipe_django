@@ -2,66 +2,31 @@
 
 {% block content %}
 <h1>{{ title }}</h1>
-<form id="form-container" action="" method="POST" enctype="multipart/form-data">
+<form action="" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
-  <div class="form-error">{{ form.non_field_errors }}</div>
-
-  {% for f in recipe_form %}
-  <p><label class="form-label" for="{{ f.id_for_label }}">
-      {{ f.label }}
-    </label>{{ f }}</p>
-  <div class="form-error">{{ f.errors }}</div>
-  {% endfor %}
-
-  {{ ingredient_formset.management_form }}
-  {{ composition_formset.management_form }}
-
-  <div class="add-ingredient">
-    <div>
-      {% for ing in ingredient_formset %}
-      <div class="add-ingredients recipe-form">
-        {{ ing.as_p}}
-      </div>
-      {% endfor %}
-    </div>
-
-    <div>
-      {% for comp in composition_formset %}
-      <div class="add-ingredients recipe-form">
-        {{ comp.as_p}}
-      </div>
-      {% endfor %}
+  {{ recipe_form.as_p }}
+  <div id="formset-container">
+    <div class="ingredient-form">
+        <input type="text" name="ingredient_name" placeholder="Ingredient Name" required>
+        <input type="text" name="quantity" placeholder="Quantity" required>
+        <input type="text" name="unit_measure" placeholder="Unit Measure" required>
     </div>
   </div>
-  <button id="add-form" type="button">Добавить ингредиент</button>
-  <div class="form-error">{{ recipe_form.category.errors }}</div>
+  <button type="button" onclick="addIngredient()">Добавить рецепт</button>
   <p><button type="submit">Отправить</button></p>
 </form>
 
 <script>
-  let recipeForm = document.querySelectorAll(".recipe-form")
-  let container = document.querySelector("#form-container")
-  let addButton = document.querySelector("#add-form")
-  let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
-
-  let formNum = recipeForm.length - 1
-  addButton.addEventListener('click', addForm)
-
-  function addForm(e) {
-    e.preventDefault()
-
-    let newForm1 = recipeForm[0].cloneNode(true)
-    let newForm2 = recipeForm[1].cloneNode(true)
-    let formRegex = RegExp(`form-(\\d){1}-`, 'g')
-
-    formNum++
-    newForm1.innerHTML = newForm1.innerHTML.replace(formRegex, `form-${formNum}-`)
-    container.insertBefore(newForm1, addButton)
-    newForm2.innerHTML = newForm2.innerHTML.replace(formRegex, `form-${formNum}-`)
-    container.insertBefore(newForm2, addButton)
-
-    totalForms.setAttribute('value', `${formNum + 1}`)
-  }
+        function addIngredient() {
+            var formsetContainer = document.getElementById('formset-container');
+            var newForm = document.createElement('div');
+            newForm.innerHTML = `
+                <input type="text" name="ingredient_name" placeholder="Ingredient Name" required>
+                <input type="text" name="quantity" placeholder="Quantity" required>
+                <input type="text" name="unit_measure" placeholder="Unit Measure" required>
+            `;
+            formsetContainer.appendChild(newForm);
+        }
 </script>
 
 {% endblock %}

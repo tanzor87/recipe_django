@@ -2,10 +2,8 @@ from django.urls import path, include
 from .views import (
     RecipeIndexView,
     about,
-    AddRecipe,
     add_recipe,
     UpdateRecipe,
-    login,
     ShowDetail,
     RecipeCategory,
 )
@@ -16,7 +14,7 @@ urlpatterns = [
     path('addrecipe/', add_recipe, name='add_recipe'),
     # path('addrecipe/', AddRecipe.as_view(), name='add_recipe'),
     path('edit/<int:pk>/', UpdateRecipe.as_view(), name='edit_recipe'),
-    path('login/', login, name='login'),
+    # path('login/', login, name='login'),
     # path('detail/<int:detail_id>/', show_detail, name='detail'),
     path('detail/<int:detail_id>/', ShowDetail.as_view(), name='detail'),
     # path('detail/<slug:detail_slug>/', show_detail, name='detail'),
